@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="icon">🧪</span>
+      Learning Lab
+    </div>
+    <nav>
+      <button class="active" data-nav="library">Library</button>
+      <button data-nav="about">About</button>
+    </nav>
+  </header>
+
+  <!-- ===== Main layout ===== -->
+  <main class="container">
+
+    <!-- Left: Pomodoro + sessions -->
+    <aside class="sidebar">
+      <div class="pomodoro">
+        <h2>Pomodoro</h2>
+        <div class="modes">
+          <button id="mode25" class="active">25 | 5</button>
+          <button id="mode50">50 | 10</button>
+        </div>
+        <div class="timer" id="timer">25:00</div>
+        <div class="phase" id="phase">Focus</div>
+        <div class="stats">
+          <span><b id="focusCount">0</b> focus</span>
+          <span><b id="breakCount">0</b> breaks</span>
+          <span><b id="focusMins">0</b> min</span>
+        </div>
+        <div class="controls">
+          <button id="startPause" class="primary">Start</button>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="today">
+        <h3>Today's Sessions</h3>
+        <div class="session-list" id="sessionList">
+          <div class="empty">No sessions yet. Start the timer!</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: Library -->
+    <section class="library">
+      <div class="toolbar">
+        <span class="title" id="activeDocTitle">Learning Library</span>
+        <span class="doc-count" id="docCount">0 documents</span>
+        <button class="toolbar-btn" id="uploadBtn">+ Add File</button>
+        <button class="toolbar-btn ghost" id="newDocBtn">New Note</button>
+        <button class="toolbar-btn ghost" id="printBtn" disabled>Print</button>
+        <button class="toolbar-btn ghost" id="downloadBtn" disabled>Download</button>
+      </div>
+
+      <div class="content">
+        <div class="doc-list" id="docList"></div>
+
+        <div class="reader">
+          <div class="anotation-toolbar" id="annotationBar" style="display:none;">
+            <span class="label">Highlight:</span>
+            <span class="color-swatch active" data-color="#ffe58a" style="background:#ffe58a;"></span>
+            <span class="color-swatch" data-color="#a8e6cf" style="background:#a8e6cf;"></span>
+            <span class="color-swatch" data-color="#d0b4ff" style="background:#d0b4ff;"></span>
+            <span class="color-swatch" data-color="#ffb4b4" style="background:#ffb4b4;"></span>
+            <span class="annotation-tools">
+              <button id="highlightTool" class="active">Highlight</button>
+              <button id="noteTool">Note</button>
+            </span>
+          </div>
+
+          <div class="page" id="page">
+            <div class="placeholder" id="placeholder">
+              <div class="inner">
+                <div class="big">📚</div>
+                <p>Upload a document to start learning.</p>
+                <p>Select text to highlight or add annotations.</p>
+              </div>
+            </div>
+            <div class="paper" id="paper" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- New document modal -->
+  <div class="modal-overlay" id="newDocModal">
+    <div class="modal editor">
+      <h3>Create Note</h3>
+      <label>Title</label>
+      <input type="text" id="newDocTitle" placeholder="Note title">
+      <label>Content</label>
+      <textarea id="newDocContent" placeholder="Write your notes here..."></textarea>
+      <div class="actions">
+        <button class="toolbar-btn ghost" id="cancelNewDoc">Cancel</button>
+        <button class="toolbar-btn" id="saveNewDoc">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload warning / name modal -->
+  <div class="modal-overlay" id="fileModal">
+    <div class="modal">
+      <h3 id="fileModalTitle">Add File</h3>
+      <input type="file" id="fileInput" accept=".txt,.md,.markdown,.html,.htm,.csv,.json,.js,.jsx,.ts,.tsx,.css,.xml,.yaml,.yml,.py,.rb,.log,.pdf,.png,.jpg,.jpeg,.gif,.webp,.bmp,.svg,.ico,.mp3,.mp4,.webm" style="width:100%;margin-bottom:16px;">
+      <label>Label (optional)</label>
+      <input type="text" id="fileLabel" placeholder="Display name for this file">
+      <div class="actions">
+        <button class="toolbar-btn ghost" id="cancelFile">Cancel</button>
+        <button class="toolbar-btn" id="saveFile">Add to Library</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>Learning Lab • Study smarter 🍅</footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
