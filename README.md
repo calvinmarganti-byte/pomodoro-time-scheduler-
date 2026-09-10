@@ -1,4 +1,4 @@
-# 🍅 Pomodoro Learning Lab
+# Pomodoro Learning Lab
 
 A single-page study app: **Pomodoro timer + document library + annotations**.
 No build step. Just static files — ideal for editing directly on GitHub and hosting with **GitHub Pages**.
