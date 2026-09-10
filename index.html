@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Lab</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #ee5a24;
+      --primary-dark: #c0481d;
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --text: #2d3436;
+      --muted: #7f8c8d;
+      --border: #e1e3e6;
+      --accent: #ffe9e0;
+      --green: #00b894;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: #fff;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+      flex-shrink: 0;
+    }
+
+    .navbar .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .navbar .logo .icon {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .navbar nav button {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .navbar nav button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .navbar nav button.active {
+      background: #fff;
+      color: var(--primary);
+      border-color: #fff;
+    }
+
+    /* ===== Layout ===== */
+    .container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      grid-template-rows: 1fr;
+      gap: 24px;
+      padding: 24px;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ===== Left sidebar: Pomodoro ===== */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 0;
+    }
+
+    .pomodoro {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+
+    .pomodoro h2 {
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .pomodoro .modes {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .pomodoro .modes button {
+      background: var(--accent);
+      color: var(--primary);
+      border: 2px solid transparent;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pomodoro .modes button.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .pomodoro .timer {
+      font-size: 4.2rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .pomodoro .phase {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .pomodoro .stats {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .pomodoro .stats span b {
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .pomodoro .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .pomodoro .controls button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pomodoro .controls .primary {
+      background: var(--primary);
+      color: #fff;
+      flex: 1;
+    }
+
+    .pomodoro .controls .primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .pomodoro .controls .ghost {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .pomodoro .progress-track {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 999px;
+      margin-top: 18px;
+      overflow: hidden;
+    }
+
+    .pomodoro .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b6b, var(--primary));
+      width: 100%;
+      border-radius: 999px;
+      transition: width 1s linear;
+    }
+
+    /* Today's sessions */
+    .today {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .today h3 {
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .today .session-list {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .today .session {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .today .session .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .today .session .dot.done { background: var(--green); }
+    .today .session .dot.break { background: #ffeaa7; }
+    .today .session .dot.break-done { background: #fdcb6e; }
+
+    .today .session .meta {
+      flex: 1;
+      font-size: 0.85rem;
+    }
+
+    .today .session .meta .sub {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .today .empty {
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    /* ===== Right: Library / annotations ===== */
+    .library {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .library .toolbar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .library .toolbar .title {
+      font-weight: 700;
+      font-size: 1rem;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .library .toolbar .doc-count {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .toolbar-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toolbar-btn:hover { background: var(--primary-dark); }
+
+    .toolbar-btn.ghost {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .toolbar-btn.ghost:hover { background: var(--border); }
+
+    .toolbar-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .library .content {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    /* Document list */
+    .doc-list {
+      width: 220px;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+      background: #fafbfc;
+    }
+
+    .doc-item {
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+      font-size: 0.85rem;
+    }
+
+    .doc-item:hover { background: var(--bg); }
+
+    .doc-item.active {
+      background: var(--accent);
+      border-color: var(--primary);
+    }
+
+    .doc-item .doc-name {
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .doc-item .doc-meta {
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-top: 4px;
+    }
+
+    /* Reader / annotation canvas */
+    .reader {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .anotation-toolbar {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+    }
+
+    .anotation-toolbar .label {
+      color: var(--muted);
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .color-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .color-swatch.active {
+      border: 2px solid var(--text);
+      transform: scale(1.15);
+    }
+
+    .annotation-tools button {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .annotation-tools button.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Document page */
+    .page {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      background: #eceef1;
+    }
+
+    .paper {
+      background: #fff;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px;
+      min-height: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      line-height: 1.7;
+      font-size: 1rem;
+      position: relative;
+    }
+
+    .paper h1 {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .paper .subtitle {
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+
+    .paper p { margin-bottom: 16px; }
+
+    .paper blockquote {
+      border-left: 4px solid var(--primary);
+      padding: 8px 16px;
+      margin: 16px 0;
+      background: var(--accent);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .paper .notes {
+      margin-top: 32px;
+      border-top: 2px dashed var(--border);
+      padding-top: 20px;
+    }
+
+    .paper .notes h3 {
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .note {
+      background: #fdf9f3;
+      border-left: 4px solid #f39c12;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .note .color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .note .note-text {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    /* Image viewer */
+    .image-wrap {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+      margin: 16px 0;
+      cursor: crosshair;
+    }
+
+    .image-wrap img {
+      max-width: 100%;
+      max-height: 60vh;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .image-wrap .pin {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .image-hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    /* PDF viewer */
+    .pdf-frame {
+      width: 100%;
+      height: 62vh;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 16px 0;
+      background: #fff;
+    }
+
+    .pdf-hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    .add-note-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .add-note-btn:hover { background: var(--primary-dark); }
+
+    .note .delete {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .note .delete:hover { color: red; }
+
+    .placeholder {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      text-align: center;
+      padding: 40px;
+    }
+
+    .placeholder .inner .big { font-size: 3rem; margin-bottom: 12px; }
+    .placeholder .inner p { margin-bottom: 8px; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 16px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    /* Document editor */
+    .editor textarea {
+      width: 100%;
+      min-height: 120px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin-bottom: 12px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal h3 { margin-bottom: 16px; }
+
+    .modal label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .modal input[type="text"],
+    .modal textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .modal .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .library .content {
+        flex-direction: column;
+      }
+      .doc-list {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        overflow-x: auto;
+      }
+      .doc-item { min-width: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="icon">🧪</span>
+      Learning Lab
+    </div>
+    <nav>
+      <button class="active" data-nav="library">Library</button>
+      <button data-nav="about">About</button>
+    </nav>
+  </header>
+
+  <!-- ===== Main layout ===== -->
+  <main class="container">
+
+    <!-- Left: Pomodoro + sessions -->
+    <aside class="sidebar">
+      <div class="pomodoro">
+        <h2>Pomodoro</h2>
+        <div class="modes">
+          <button id="mode25" class="active">25 | 5</button>
+          <button id="mode50">50 | 10</button>
+        </div>
+        <div class="timer" id="timer">25:00</div>
+        <div class="phase" id="phase">Focus</div>
+        <div class="stats">
+          <span><b id="focusCount">0</b> focus</span>
+          <span><b id="breakCount">0</b> breaks</span>
+          <span><b id="focusMins">0</b> min</span>
+        </div>
+        <div class="controls">
+          <button id="startPause" class="primary">Start</button>
+          <button id="reset" class="ghost">Reset</button>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="today">
+        <h3>Today's Sessions</h3>
+        <div class="session-list" id="sessionList">
+          <div class="empty">No sessions yet. Start the timer!</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: Library -->
+    <section class="library">
+      <div class="toolbar">
+        <span class="title" id="activeDocTitle">Learning Library</span>
+        <span class="doc-count" id="docCount">0 documents</span>
+        <button class="toolbar-btn" id="uploadBtn">+ Add File</button>
+        <button class="toolbar-btn ghost" id="newDocBtn">New Note</button>
+        <button class="toolbar-btn ghost" id="printBtn" disabled>Print</button>
+        <button class="toolbar-btn ghost" id="downloadBtn" disabled>Download</button>
+      </div>
+
+      <div class="content">
+        <div class="doc-list" id="docList"></div>
+
+        <div class="reader">
+          <div class="anotation-toolbar" id="annotationBar" style="display:none;">
+            <span class="label">Highlight:</span>
+            <span class="color-swatch active" data-color="#ffe58a" style="background:#ffe58a;"></span>
+            <span class="color-swatch" data-color="#a8e6cf" style="background:#a8e6cf;"></span>
+            <span class="color-swatch" data-color="#d0b4ff" style="background:#d0b4ff;"></span>
+            <span class="color-swatch" data-color="#ffb4b4" style="background:#ffb4b4;"></span>
+            <span class="annotation-tools">
+              <button id="highlightTool" class="active">Highlight</button>
+              <button id="noteTool">Note</button>
+            </span>
+          </div>
+
+          <div class="page" id="page">
+            <div class="placeholder" id="placeholder">
+              <div class="inner">
+                <div class="big">📚</div>
+                <p>Upload a document to start learning.</p>
+                <p>Select text to highlight or add annotations.</p>
+              </div>
+            </div>
+            <div class="paper" id="paper" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- New document modal -->
+  <div class="modal-overlay" id="newDocModal">
+    <div class="modal editor">
+      <h3>Create Note</h3>
+      <label>Title</label>
+      <input type="text" id="newDocTitle" placeholder="Note title">
+      <label>Content</label>
+      <textarea id="newDocContent" placeholder="Write your notes here..."></textarea>
+      <div class="actions">
+        <button class="toolbar-btn ghost" id="cancelNewDoc">Cancel</button>
+        <button class="toolbar-btn" id="saveNewDoc">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload warning / name modal -->
+  <div class="modal-overlay" id="fileModal">
+    <div class="modal">
+      <h3 id="fileModalTitle">Add File</h3>
+      <input type="file" id="fileInput" accept=".txt,.md,.markdown,.html,.htm,.csv,.json,.js,.jsx,.ts,.tsx,.css,.xml,.yaml,.yml,.py,.rb,.log,.pdf,.png,.jpg,.jpeg,.gif,.webp,.bmp,.svg,.ico,.mp3,.mp4,.webm" style="width:100%;margin-bottom:16px;">
+      <label>Label (optional)</label>
+      <input type="text" id="fileLabel" placeholder="Display name for this file">
+      <div class="actions">
+        <button class="toolbar-btn ghost" id="cancelFile">Cancel</button>
+        <button class="toolbar-btn" id="saveFile">Add to Library</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>Learning Lab • Study smarter 🍅</footer>
+
+  <script>
+    // ================= POMODORO =================
+
+    function playBell() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const playTone = (freq, startTime, duration) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.6, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      };
+      const now = ctx.currentTime;
+      playTone(880, now, 0.3);
+      playTone(1100, now + 0.15, 0.3);
+      playTone(1320, now + 0.3, 0.4);
+      playTone(1100, now + 0.55, 0.3);
+      playTone(880, now + 0.7, 0.5);
+    }
+
+    const MODES = {
+      '25': { focus: 25 * 60, break: 5 * 60, label: '25 | 5' },
+      '50': { focus: 50 * 60, break: 10 * 60, label: '50 | 10' },
+    };
+
+    let currentMode = '25';
+    let phase = 'focus';
+    let timeLeft = MODES['25'].focus;
+    let phaseDuration = MODES['25'].focus;
+    let interval = null;
+    let running = false;
+    let focusCount = 0;
+    let breakCount = 0;
+    let totalFocusMins = 0;
+
+    const sessions = []; // { type: 'focus'|'break', time, label, completed }
+
+    const timerEl = document.getElementById('timer');
+    const phaseEl = document.getElementById('phase');
+    const progressFill = document.getElementById('progressFill');
+    const startPauseBtn = document.getElementById('startPause');
+    const resetBtn = document.getElementById('reset');
+    const mode25Btn = document.getElementById('mode25');
+    const mode50Btn = document.getElementById('mode50');
+    const focusCountEl = document.getElementById('focusCount');
+    const breakCountEl = document.getElementById('breakCount');
+    const focusMinsEl = document.getElementById('focusMins');
+    const sessionListEl = document.getElementById('sessionList');
+
+    function fmt(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateTimer() {
+      timerEl.textContent = fmt(timeLeft);
+      const pct = Math.max(0, (timeLeft / phaseDuration) * 100);
+      progressFill.style.width = pct + '%';
+    }
+
+    function updatePhase() {
+      phaseEl.textContent = phase === 'focus' ? 'Focus' : 'Break';
+    }
+
+    function updateModeButtons() {
+      mode25Btn.classList.toggle('active', currentMode === '25');
+      mode50Btn.classList.toggle('active', currentMode === '50');
+    }
+
+    function updateStats() {
+      focusCountEl.textContent = focusCount;
+      breakCountEl.textContent = breakCount;
+      focusMinsEl.textContent = totalFocusMins;
+    }
+
+    function renderSessions() {
+      sessionListEl.innerHTML = '';
+      if (sessions.length === 0) {
+        sessionListEl.innerHTML = '<div class="empty">No sessions yet. Start the timer!</div>';
+        return;
+      }
+      sessions.forEach((s, i) => {
+        const dotClass = s.type === 'focus'
+          ? (s.completed ? 'done' : '')
+          : (s.completed ? 'break-done' : 'break');
+        const st = document.createElement('div');
+        st.className = 'session';
+        st.innerHTML = `
+          <span class="dot ${dotClass}"></span>
+          <div class="meta">
+            <div>${s.label} • ${s.type === 'focus' ? 'Focus' : 'Break'}</div>
+            <div class="sub">${s.time} ${s.completed ? '• completed' : '• running'}</div>
+          </div>`;
+        sessionListEl.prepend(st);
+      });
+    }
+
+    function setPhaseTime(sec) {
+      phaseDuration = sec;
+      timeLeft = sec;
+    }
+
+    function setMode(mode) {
+      stop();
+      currentMode = mode;
+      phase = 'focus';
+      setPhaseTime(MODES[mode].focus);
+      updateModeButtons();
+      updatePhase();
+      updateTimer();
+    }
+
+    function startVibe() {
+      document.body.style.background = phase === 'focus'
+        ? 'var(--bg)'
+        : 'linear-gradient(135deg,#ffeaa7,#fdcb6e)';
+      document.querySelector('.container').style.background = 'transparent';
+    }
+
+    function start() {
+      if (timeLeft === 0) return;
+      running = true;
+      startPauseBtn.textContent = 'Pause';
+      startVibe();
+      interval = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          running = false;
+          recordCompleted();
+          playBell();
+          if (phase === 'focus') {
+            phase = 'break';
+            setPhaseTime(MODES[currentMode].break);
+          } else {
+            phase = 'focus';
+            setPhaseTime(MODES[currentMode].focus);
+          }
+          updatePhase();
+          updateTimer();
+          start();
+        }
+      }, 1000);
+    }
+
+    function recordCompleted() {
+      const type = phase;
+      const label = MODES[currentMode].label;
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      sessions.push({ type, label, time, completed: true });
+      if (type === 'focus') {
+        focusCount++;
+        totalFocusMins += MODES[currentMode].focus / 60;
+      } else {
+        breakCount++;
+      }
+      updateStats();
+      renderSessions();
+    }
+
+    function recordStarted() {
+      if (sessions.some(s => !s.completed)) return;
+      const type = phase;
+      const label = MODES[currentMode].label;
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      sessions.push({ type, label, time, completed: false });
+      renderSessions();
+    }
+
+    function stop() {
+      running = false;
+      clearInterval(interval);
+      startPauseBtn.textContent = 'Start';
+      document.body.style.background = 'var(--bg)';
+      sessions.forEach(s => { if (!s.completed && s.type === 'focus' && phase !== 'focus') s.completed = true; });
+    }
+
+    function reset() {
+      stop();
+      phase = 'focus';
+      setPhaseTime(MODES[currentMode].focus);
+      updatePhase();
+      updateTimer();
+    }
+
+    startPauseBtn.addEventListener('click', () => {
+      if (running) { stop(); }
+      else { recordStarted(); start(); }
+    });
+    resetBtn.addEventListener('click', reset);
+    mode25Btn.addEventListener('click', () => setMode('25'));
+    mode50Btn.addEventListener('click', () => setMode('50'));
+
+    updateTimer();
+    updateStats();
+
+    // ================= LIBRARY =================
+    const docs = [];
+    let activeDocId = null;
+    let highlightColor = '#ffe58a';
+    let activeTool = 'highlight';
+
+    const docListEl = document.getElementById('docList');
+    const pageEl = document.getElementById('page');
+    const paperEl = document.getElementById('paper');
+    const placeholderEl = document.getElementById('placeholder');
+    const activeDocTitle = document.getElementById('activeDocTitle');
+    const docCountEl = document.getElementById('docCount');
+    const annotationBar = document.getElementById('annotationBar');
+    const printBtn = document.getElementById('printBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // Modals
+    const newDocModal = document.getElementById('newDocModal');
+    const fileModal = document.getElementById('fileModal');
+    const fileInput = document.getElementById('fileInput');
+    const fileLabel = document.getElementById('fileLabel');
+
+    function renderDocList() {
+      docListEl.innerHTML = '';
+      if (docs.length === 0) {
+        docListEl.innerHTML = '<div class="doc-item" style="cursor:default;color:var(--muted);">No documents yet</div>';
+      }
+      docs.forEach(doc => {
+        const item = document.createElement('div');
+        item.className = 'doc-item' + (doc.id === activeDocId ? ' active' : '');
+        const size = (doc.content.length / 1024).toFixed(1);
+        item.innerHTML = `
+          <div class="doc-name">${escapeHtml(doc.name)}</div>
+          <div class="doc-meta">${doc.type} • ${size} KB • ${doc.annotations.length} notes</div>`;
+        item.addEventListener('click', () => selectDoc(doc.id));
+        docListEl.appendChild(item);
+      });
+      docCountEl.textContent = docs.length + ' document' + (docs.length === 1 ? '' : 's');
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function renderPaper(doc) {
+      placeholderEl.style.display = 'none';
+      paperEl.style.display = 'block';
+      paperEl.innerHTML = '';
+      annotationBar.style.display = doc.kind === 'text' ? 'flex' : 'none';
+
+      const h1 = document.createElement('h1');
+      h1.textContent = doc.name;
+      const sub = document.createElement('div');
+      sub.className = 'subtitle';
+      sub.textContent = doc.type + ' document • ' + doc.annotations.length + ' annotations';
+      paperEl.appendChild(h1);
+      paperEl.appendChild(sub);
+
+      // Render body based on kind
+      const body = document.createElement('div');
+      body.className = 'doc-body';
+      if (doc.kind === 'image') {
+        renderImageBody(body, doc);
+      } else if (doc.kind === 'pdf') {
+        renderPdfBody(body, doc);
+      } else if (doc.kind === 'audio') {
+        renderAudioBody(body, doc);
+      } else if (doc.kind === 'video') {
+        renderVideoBody(body, doc);
+      } else {
+        body.innerHTML = renderAnnotated(doc);
+      }
+      paperEl.appendChild(body);
+
+      // Footnotes/notes section
+      const notesSection = document.createElement('div');
+      notesSection.className = 'notes';
+      notesSection.innerHTML = '<h3>Annotations</h3>';
+      if (doc.annotations.length === 0) {
+        const empty = document.createElement('p');
+        empty.style.color = 'var(--muted)';
+        empty.style.fontSize = '0.85rem';
+        empty.textContent = doc.kind === 'text'
+          ? 'Select text to highlight. Switch to Note mode to add comments.'
+          : 'No annotations yet. Click "Add note" to pin a comment.';
+        notesSection.appendChild(empty);
+      } else {
+        doc.annotations.forEach((a, idx) => {
+          const note = document.createElement('div');
+          note.className = 'note';
+          const anchorText = a.anchor ? `<span style="color:var(--muted);font-size:0.75rem;">at ${a.anchor}</span>` : '';
+          note.innerHTML = `
+            <span class="color-dot" style="background:${a.color || '#f39c12'};"></span>
+            <div class="note-text">
+              <strong style="font-size:0.8rem;">${escapeHtml(a.text || 'Note')}</strong>
+              ${anchorText}
+              ${a.note ? '<br>' + escapeHtml(a.note) : ''}
+            </div>
+            <button class="delete" data-idx="${idx}">✕</button>`;
+          note.querySelector('.delete').addEventListener('click', (e) => {
+            e.stopPropagation();
+            doc.annotations.splice(idx, 1);
+            renderDocList();
+            renderPaper(doc);
+          });
+          notesSection.appendChild(note);
+        });
+      }
+      paperEl.appendChild(notesSection);
+    }
+
+    function renderImageBody(body, doc) {
+      const hint = document.createElement('div');
+      hint.className = 'image-hint';
+      hint.textContent = 'Click anywhere on the image to pin a note.';
+      body.appendChild(hint);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'image-wrap';
+      const img = document.createElement('img');
+      img.src = doc.url;
+      img.alt = doc.name;
+      wrap.appendChild(img);
+
+      doc.annotations.forEach(a => {
+        if (!a.x && !a.y) return;
+        const pin = document.createElement('span');
+        pin.className = 'pin';
+        pin.style.left = a.x + '%';
+        pin.style.top = a.y + '%';
+        pin.style.background = a.color || '#f39c12';
+        pin.title = a.note || a.text;
+        wrap.appendChild(pin);
+      });
+
+      wrap.addEventListener('click', (e) => {
+        const rect = wrap.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        const noteText = prompt('New note for this spot:');
+        if (noteText === null || noteText === '') return;
+        doc.annotations.push({ text: '', note: noteText, x: x.toFixed(1), y: y.toFixed(1), color: highlightColor });
+        renderDocList();
+        renderPaper(doc);
+      });
+
+      body.appendChild(wrap);
+    }
+
+    function renderPdfBody(body, doc) {
+      const hint = document.createElement('div');
+      hint.className = 'pdf-hint';
+      hint.textContent = 'Use "Add note" below to annotate this PDF.';
+      body.appendChild(hint);
+
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-note-btn';
+      addBtn.textContent = '+ Add note';
+      addBtn.addEventListener('click', () => {
+        const noteText = prompt('New annotation:');
+        if (noteText === null || noteText === '') return;
+        const page = prompt('Page number (optional):') || 'PDF';
+        doc.annotations.push({ text: '', note: noteText, anchor: page, color: highlightColor });
+        renderDocList();
+        renderPaper(doc);
+      });
+      body.appendChild(addBtn);
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'pdf-frame';
+      iframe.src = doc.url;
+      iframe.type = 'application/pdf';
+      body.appendChild(iframe);
+    }
+
+    function renderMediaBody(body, doc) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-note-btn';
+      addBtn.textContent = '+ Add note';
+      addBtn.addEventListener('click', () => {
+        const noteText = prompt('New note:');
+        if (noteText === null || noteText === '') return;
+        doc.annotations.push({ text: '', note: noteText, color: highlightColor });
+        renderDocList();
+        renderPaper(doc);
+      });
+      body.appendChild(addBtn);
+
+      const audio = document.createElement('audio');
+      audio.src = doc.url;
+      audio.controls = true;
+      audio.style.width = '100%';
+      audio.style.margin = '16px 0';
+      body.appendChild(audio);
+    }
+
+    function renderVideoBody(body, doc) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-note-btn';
+      addBtn.textContent = '+ Add note';
+      addBtn.addEventListener('click', () => {
+        const noteText = prompt('New note:');
+        if (noteText === null || noteText === '') return;
+        doc.annotations.push({ text: '', note: noteText, color: highlightColor });
+        renderDocList();
+        renderPaper(doc);
+      });
+      body.appendChild(addBtn);
+
+      const video = document.createElement('video');
+      video.src = doc.url;
+      video.controls = true;
+      video.style.maxWidth = '100%';
+      video.style.maxHeight = '60vh';
+      video.style.borderRadius = '8px';
+      video.style.margin = '16px 0';
+      body.appendChild(video);
+    }
+
+    function renderAnnotated(doc) {
+      // Split paragraphs and wrap annotations
+      let html = '';
+      doc.paragraphs.forEach(p => {
+        html += '<p>' + p + '</p>';
+      });
+      // Apply highlights as <mark>
+      doc.annotations.forEach(a => {
+        html = html.split(a.text).join(`<mark style="background:${a.color};" title="${escapeHtml(a.note || '')}">${escapeHtml(a.text)}</mark>`);
+      });
+      // Also handle quotes
+      if (doc.quote) {
+        html = `<blockquote>${escapeHtml(doc.quote)}</blockquote>` + html;
+      }
+      return html;
+    }
+
+    function selectDoc(id) {
+      activeDocId = id;
+      const doc = docs.find(d => d.id === id);
+      if (!doc) return;
+      activeDocTitle.textContent = doc.name;
+      printBtn.disabled = false;
+      downloadBtn.disabled = false;
+      renderDocList();
+      renderPaper(doc);
+    }
+
+    function addDoc({ name, type, content, paragraphs, quote, isNote, kind, url }) {
+      const doc = {
+        id: 'doc-' + Date.now(),
+        name,
+        type: isNote ? 'note' : (type || 'text'),
+        content: content || '',
+        paragraphs: paragraphs || (typeof content === 'string' ? content.split('\n').filter(l => l.trim()) : []),
+        quote: quote || null,
+        annotations: [],
+        createdAt: new Date().toLocaleDateString(),
+        isNote: !!isNote,
+        kind: kind || 'text',
+        url: url || null,
+      };
+      docs.unshift(doc);
+      renderDocList();
+      selectDoc(doc.id);
+    }
+
+    // Navigation
+    document.querySelectorAll('.navbar nav button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.navbar nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (btn.dataset.nav === 'about') {
+          placeholderEl.style.display = 'flex';
+          paperEl.style.display = 'none';
+          annotationBar.style.display = 'none';
+          activeDocTitle.textContent = 'About Learning Lab';
+          placeholderEl.innerHTML = `
+            <div class="inner">
+              <div class="big">🧪</div>
+              <h2>Learning Lab</h2>
+              <p>Upload files: text (.txt, .md, .html), code, PDFs, images (PNG, JPG), audio/video, and more.</p>
+              <p>Use the Pomodoro timer on the left to stay focused.</p>
+            </div>`;
+        } else {
+          const doc = docs.find(d => d.id === activeDocId);
+          if (doc) renderPaper(doc);
+          else {
+            placeholderEl.style.display = 'flex';
+            placeholderEl.innerHTML = `
+              <div class="inner">
+                <div class="big">📚</div>
+                <p>Upload a document to start learning.</p>
+                <p>Select text to highlight or add annotations.</p>
+              </div>`;
+          }
+          activeDocTitle.textContent = doc ? doc.name : 'Learning Library';
+        }
+      });
+    });
+
+    // New note
+    document.getElementById('newDocBtn').addEventListener('click', () => {
+      newDocModal.classList.add('show');
+    });
+    document.getElementById('cancelNewDoc').addEventListener('click', () => {
+      newDocModal.classList.remove('show');
+    });
+    document.getElementById('saveNewDoc').addEventListener('click', () => {
+      const title = document.getElementById('newDocTitle').value.trim();
+      const content = document.getElementById('newDocContent').value.trim();
+      if (!title) { alert('Please add a title'); return; }
+      addDoc({ name: title, content: content || 'New note', isNote: true });
+      newDocModal.classList.remove('show');
+      document.getElementById('newDocTitle').value = '';
+      document.getElementById('newDocContent').value = '';
+    });
+
+    // Upload file
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+      fileModal.classList.add('show');
+    });
+    document.getElementById('cancelFile').addEventListener('click', () => {
+      fileModal.classList.remove('show');
+      fileInput.value = '';
+      fileLabel.value = '';
+    });
+    document.getElementById('saveFile').addEventListener('click', () => {
+      const file = fileInput.files[0];
+      if (!file) { alert('Please choose a file'); return; }
+      const ext = (file.name.split('.').pop() || '').toLowerCase();
+      const label = fileLabel.value.trim() || file.name;
+      const type = ext.toUpperCase();
+
+      const textTypes = ['txt', 'md', 'markdown', 'html', 'htm', 'css', 'js', 'jsx', 'ts', 'tsx', 'json', 'csv', 'xml', 'yaml', 'yml', 'py', 'rb', 'log'];
+      const imageTypes = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg', 'ico'];
+      const mediaTypes = ['mp3', 'mp4', 'webm'];
+
+      const finish = () => {
+        fileModal.classList.remove('show');
+        fileInput.value = '';
+        fileLabel.value = '';
+      };
+
+      if (imageTypes.includes(ext)) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          addDoc({ name: label, type, kind: 'image', url: e.target.result });
+          finish();
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      if (ext === 'pdf') {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const blob = new Blob([e.target.result], { type: 'application/pdf' });
+          addDoc({ name: label, type, kind: 'pdf', url: URL.createObjectURL(blob) });
+          finish();
+        };
+        reader.readAsArrayBuffer(file);
+        return;
+      }
+
+      if (mediaTypes.includes(ext)) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const mediaKind = ext === 'mp3' ? 'audio' : 'video';
+          addDoc({ name: label, type, kind: mediaKind, url: e.target.result });
+          finish();
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      // Fallback: try to read as text
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target.result;
+        let firstLine = content.split('\n')[0] || '';
+        let quote = null;
+        if (/\.md$/i.test(file.name)) {
+          const headings = content.match(/^#{1,3} .+/gm);
+          firstLine = headings ? headings[0].replace(/^#+\s*/, '') : firstLine;
+        }
+        addDoc({
+          name: label,
+          type: textTypes.includes(ext) ? type : 'text',
+          content,
+          quote: quote,
+          isNote: false,
+        });
+        finish();
+      };
+      reader.readAsText(file);
+    });
+
+    // Print & Download
+    printBtn.addEventListener('click', () => {
+      const doc = docs.find(d => d.id === activeDocId);
+      if (!doc) return;
+      window.print();
+    });
+    downloadBtn.addEventListener('click', () => {
+      const doc = docs.find(d => d.id === activeDocId);
+      if (!doc) return;
+      const blob = new Blob([doc.content + '\n\n--- ANNOTATIONS ---\n'
+        + doc.annotations.map(a => `[${a.color}] ${a.text}${a.note ? ': ' + a.note : ''}`).join('\n')],
+        { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = doc.name + '-annotated.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Annotation tools
+    document.querySelectorAll('.color-swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        highlightColor = sw.dataset.color;
+      });
+    });
+    document.getElementById('highlightTool').addEventListener('click', () => {
+      activeTool = 'highlight';
+      document.getElementById('highlightTool').classList.add('active');
+      document.getElementById('noteTool').classList.remove('active');
+    });
+    document.getElementById('noteTool').addEventListener('click', () => {
+      activeTool = 'note';
+      document.getElementById('noteTool').classList.add('active');
+      document.getElementById('highlightTool').classList.remove('active');
+    });
+
+    // Selection handler
+    document.addEventListener('mouseup', () => {
+      const doc = docs.find(d => d.id === activeDocId);
+      if (!doc) return;
+      const sel = window.getSelection();
+      const text = sel ? sel.toString().trim() : '';
+      if (text.length < 2) return;
+      if (!paperEl.contains(sel.anchorNode)) return;
+
+      if (activeTool === 'note') {
+        const noteText = prompt('Add a note for: "' + text.slice(0, 40) + '"');
+        if (noteText === null) { sel.removeAllRanges(); return; }
+        doc.annotations.push({ text, color: highlightColor, note: noteText });
+        sel.removeAllRanges();
+        renderDocList();
+        renderPaper(doc);
+        sel.removeAllRanges();
+      } else {
+        doc.annotations.push({ text, color: highlightColor, note: '' });
+        sel.removeAllRanges();
+        renderDocList();
+        renderPaper(doc);
+      }
+    });
+
+    // Init
+    addDoc({
+      name: 'Welcome to Learning Lab',
+      type: 'guide',
+      content: 'This is a sample document.\nSelect any text and it will be highlighted.\nSwitch to Note mode (in the toolbar above) to attach comments to a selection.\nEverything is stored in your browser for this session.\n\nSupported files: text, code, PDFs, images, and audio/video.',
+      paragraphs: [],
+      quote: null,
+      isNote: false,
+    });
+  </script>
+</body>
+</html>
