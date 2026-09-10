@@ -1,18 +1,17 @@
 # Pomodoro Learning Lab
 
-A single-page study app: **Pomodoro timer + document library + annotations**.
-No build step. Just static files — ideal for editing directly on GitHub and hosting with **GitHub Pages**.
+This is your personal pomodoro with files app, so LEARN FOCUSED, STAY FOCUSED, LADS. 
 
 ## Files
 
 | File | What to edit |
 |------|--------------|
 | `index.html` | Page structure, buttons, text, mode buttons |
-| `config.js` | ⭐ **Settings** — timer lengths, chime, colors, file types, welcome doc |
+| `config.js` | timer lengths, chime, colors, file types, welcome doc |
 | `styles.css` | Theme — edit `:root` colors, layout, fonts |
 | `app.js` | Behavior — timer logic, annotations, uploads |
 
-> Most changes only need **`config.js`** (timers) or **`styles.css`** (`:root` colors).
+config.js for timers, style.css for colors yo. 
 
 ## Edit on GitHub (no local setup)
 
